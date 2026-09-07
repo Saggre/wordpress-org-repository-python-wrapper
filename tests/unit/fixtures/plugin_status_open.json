@@ -1,0 +1,53 @@
+{
+    "name": "Akismet Anti-spam: Spam Protection",
+    "slug": "akismet",
+    "version": "5.7.2",
+    "author": "<a href=\"https://profiles.wordpress.org/automattic/\">Automattic</a>",
+    "author_profile": "https://profiles.wordpress.org/automattic/",
+    "requires": "5.8",
+    "tested": "7.1",
+    "requires_php": "7.2",
+    "requires_plugins": [],
+    "compatibility": [],
+    "rating": 94,
+    "num_ratings": 1186,
+    "support_threads": 2,
+    "support_threads_resolved": 2,
+    "downloaded": 405811187,
+    "last_updated": "2026-08-18 11:42pm GMT",
+    "added": "2005-10-20",
+    "homepage": "https://akismet.com/",
+    "sections": {
+        "description": "<p>Spam protection.</p>"
+    },
+    "download_link": "https://downloads.wordpress.org/plugin/akismet.5.7.2.zip",
+    "tags": {
+        "anti-spam": "anti-spam",
+        "antispam": "antispam",
+        "comments": "comments",
+        "contact-form": "contact form",
+        "spam": "spam"
+    },
+    "donate_link": "",
+    "contributors": {
+        "matt": "https://profiles.wordpress.org/matt/",
+        "ryan": "https://profiles.wordpress.org/ryan/",
+        "andy": "https://profiles.wordpress.org/andy/",
+        "mdawaffe": "https://profiles.wordpress.org/mdawaffe/",
+        "tellyworth": "https://profiles.wordpress.org/tellyworth/",
+        "josephscott": "https://profiles.wordpress.org/josephscott/",
+        "lessbloat": "https://profiles.wordpress.org/lessbloat/",
+        "eoigal": "https://profiles.wordpress.org/eoigal/",
+        "cfinke": "https://profiles.wordpress.org/cfinke/",
+        "automattic": "https://profiles.wordpress.org/automattic/",
+        "jgs": "https://profiles.wordpress.org/jgs/",
+        "procifer": "https://profiles.wordpress.org/procifer/",
+        "stephdau": "https://profiles.wordpress.org/stephdau/",
+        "kbrownkd": "https://profiles.wordpress.org/kbrownkd/",
+        "bluefuton": "https://profiles.wordpress.org/bluefuton/",
+        "derekspringer": "https://profiles.wordpress.org/derekspringer/",
+        "lschuyler": "https://profiles.wordpress.org/lschuyler/",
+        "andyperdomo": "https://profiles.wordpress.org/andyperdomo/",
+        "akismetantispam": "https://profiles.wordpress.org/akismetantispam/"
+    }
+}

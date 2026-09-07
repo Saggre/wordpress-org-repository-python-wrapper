@@ -93,6 +93,8 @@ ignore = [
 "tests/*" = [
   # assert is how pytest expresses expectations.
   "S101",
+  # Tests compare against literal values.
+  "PLR2004",
 ]
 
 [tool.ruff.lint.pydocstyle]

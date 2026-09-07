@@ -1,0 +1,48 @@
+{
+    "name": "Hello Dolly",
+    "slug": "hello-dolly",
+    "version": "1.7.2",
+    "author": "<a href=\"https://profiles.wordpress.org/matt/\">Matt Mullenweg</a>",
+    "author_profile": "https://profiles.wordpress.org/matt/",
+    "contributors": {
+        "matt": {
+            "profile": "https://profiles.wordpress.org/matt/",
+            "avatar": "https://secure.gravatar.com/avatar/33252cd1f33526af53580fcb1736172f06e6716f32afdd1be19ec3096d15dea5?s=96&d=monsterid&r=g",
+            "display_name": "Matt Mullenweg"
+        },
+        "wordpressdotorg": {
+            "profile": "https://profiles.wordpress.org/wordpressdotorg/",
+            "avatar": "https://secure.gravatar.com/avatar/178f40079143ff7464125e4fbc88e62024a16442920a6a3d6dfa3d7e626be20d?s=96&d=monsterid&r=g",
+            "display_name": "WordPress.org"
+        }
+    },
+    "requires": "4.6",
+    "tested": "6.9.7",
+    "requires_php": false,
+    "requires_plugins": [],
+    "rating": 88,
+    "num_ratings": 177,
+    "support_url": "https://wordpress.org/support/plugin/hello-dolly/",
+    "support_threads": 0,
+    "support_threads_resolved": 0,
+    "active_installs": 600000,
+    "last_updated": "2025-10-24 4:13am GMT",
+    "added": "2008-07-06",
+    "homepage": "http://wordpress.org/plugins/hello-dolly/",
+    "sections": {
+        "description": "<p>Only the smallest of plugins.</p>"
+    },
+    "download_link": "https://downloads.wordpress.org/plugin/hello-dolly.1.7.2.zip",
+    "tags": [],
+    "versions": {
+        "1.5": "https://downloads.wordpress.org/plugin/hello-dolly.1.5.zip",
+        "1.6": "https://downloads.wordpress.org/plugin/hello-dolly.1.6.zip",
+        "1.7.2": "https://downloads.wordpress.org/plugin/hello-dolly.1.7.2.zip",
+        "trunk": "https://downloads.wordpress.org/plugin/hello-dolly.zip"
+    },
+    "business_model": false,
+    "repository_url": "",
+    "commercial_support_url": "",
+    "donate_link": "",
+    "preview_link": ""
+}

@@ -1,11 +1,11 @@
-"""Unit tests for the shared client configuration."""
+"""Unit tests for the repository client configuration."""
 
 import pytest
 
-from wordpress_org_repository import BaseClientConfig
+from wordpress_org_repository import RepositoryClientConfig
 
 
-class _Config(BaseClientConfig):
+class _Config(RepositoryClientConfig):
 	"""Concrete subclass, standing in for the anonymous class the PHP test builds."""
 
 

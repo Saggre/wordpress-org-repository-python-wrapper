@@ -1,11 +1,12 @@
 """Configuration class for the WordPress.org theme client."""
 
-from .base_client_config import DEFAULT_USER_AGENT, BaseClientConfig
+from .base_client_config import DEFAULT_USER_AGENT
+from .repository_client_config import RepositoryClientConfig
 
 DEFAULT_BASE_URL = "https://themes.svn.wordpress.org"
 
 
-class ThemeClientConfig(BaseClientConfig):
+class ThemeClientConfig(RepositoryClientConfig):
 	"""Configuration for :class:`~wordpress_org_repository.theme_client.ThemeClient`."""
 
 	def __init__(

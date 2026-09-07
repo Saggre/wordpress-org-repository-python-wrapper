@@ -1,9 +1,14 @@
 """Functional tests for the plugin client, against the live repository."""
 
+import pathlib
+
 import pytest
 
 from wordpress_org_repository import (
 	DirectoryAttributes,
+	LogEntry,
+	LogPath,
+	LogPathAction,
 	PluginClient,
 	PluginClientConfig,
 	UnableToListContents,
@@ -78,3 +83,78 @@ def test_get_directory_invalid_path() -> None:
 		listing.to_array()
 
 	assert str(error.value) == ("Unable to list contents for 'woocommerce/tags/9.6.2/invalid/path', shallow listing\n\nReason: Not Found")
+
+
+def test_get_directory_deep_lists_subdirectories() -> None:
+	"""A deep listing includes the contents of subdirectories."""
+	client = PluginClient(PluginClientConfig("classic-editor", "1.6.7"))
+
+	shallow = client.get_directory().to_array()
+	deep = client.get_directory(deep=True).to_array()
+	paths = [entry.path for entry in deep]
+
+	assert len(shallow) == 5
+	assert len(deep) == 8
+	assert "classic-editor/tags/1.6.7/scripts/post.js" in paths
+
+
+def test_export_writes_the_tree(tmp_path: pathlib.Path) -> None:
+	"""Export writes every file of the version, nested directories included."""
+	client = PluginClient(PluginClientConfig("classic-editor", "1.6.7"))
+
+	files = client.export(tmp_path)
+
+	assert files == 6
+	assert (tmp_path / "scripts" / "post.js").read_bytes() == client.get_file("scripts/post.js")
+	assert (tmp_path / "classic-editor.php").read_bytes() == client.get_file("classic-editor.php")
+
+
+def test_get_log_reads_plugin_history() -> None:
+	"""The log lists the plugin's revisions newest first, each with its paths."""
+	client = PluginClient(PluginClientConfig("hello-dolly"))
+	log = client.get_log(3)
+
+	assert log
+	assert len(log) <= 3
+	assert all(isinstance(entry, LogEntry) for entry in log)
+
+	revisions = [entry.revision for entry in log]
+
+	assert revisions == sorted(revisions, reverse=True), "Revisions are not ordered newest first."
+
+	for entry in log:
+		assert entry.author
+		assert entry.date is not None
+		assert entry.paths
+		assert all(isinstance(path, LogPath) for path in entry.paths)
+		assert all(path.path.startswith("/hello-dolly/") for path in entry.paths)
+
+
+def test_get_log_reads_a_revision_range() -> None:
+	"""A single revision resolves the trunk a tag was copied from."""
+	client = PluginClient(PluginClientConfig("hello-dolly"))
+	log = client.get_log(1, 2995248, 2995248)
+
+	assert len(log) == 1
+	assert log[0].revision == 2995248
+	assert log[0].author == "priethor"
+
+	tag = log[0].paths[0]
+
+	assert tag.path == "/hello-dolly/tags/1.7.3"
+	assert tag.action is LogPathAction.ADDED
+	assert tag.node_kind == "dir"
+	assert tag.copy_from_path == "/hello-dolly/trunk"
+	assert tag.copy_from_revision == 2995208
+
+
+def test_get_repository_log_reads_every_plugin() -> None:
+	"""The repository log spans every plugin, newest first."""
+	client = PluginClient(PluginClientConfig("hello-dolly"))
+	log = client.get_repository_log(2)
+
+	assert len(log) == 2
+	assert log[0].revision > log[1].revision
+
+	for entry in log:
+		assert entry.paths

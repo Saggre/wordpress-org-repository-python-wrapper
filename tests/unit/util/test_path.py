@@ -26,10 +26,11 @@ def test_normalize(expected: str, separator: str, path: str) -> None:
 		(["foo", "bar", "baz"], "/", "foo\\bar\\baz"),
 		(["foo", "bar", "baz"], "\\", "foo/bar/baz"),
 		(["foo", "bar", "baz"], "\\", "\\foo\\bar\\baz"),
+		(["0", "foo"], "/", "0/foo"),
 	],
 )
 def test_explode(expected: list[str], separator: str, path: str) -> None:
-	"""Splitting drops the empty leading part."""
+	"""Splitting drops the empty leading part but keeps a zero segment."""
 	assert Path(separator).explode(path) == expected
 
 
@@ -42,8 +43,9 @@ def test_explode(expected: list[str], separator: str, path: str) -> None:
 		("\\foo\\bar\\baz", "\\", ["\\foo\\bar", "baz"]),
 		("foo/bar/baz", "/", ["foo", None, "bar", "baz"]),
 		("foo/baz", "/", ["foo", "", "baz"]),
+		("foo/0/bar", "/", ["foo", "0", "bar"]),
 	],
 )
 def test_join(expected: str, separator: str, parts: list[str | None]) -> None:
-	"""Empty parts are skipped and a leading separator is kept."""
+	"""Empty parts are skipped, zero segments are kept, and a leading separator is kept."""
 	assert Path(separator).join(*parts) == expected

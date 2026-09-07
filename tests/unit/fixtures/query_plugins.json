@@ -1,0 +1,143 @@
+{
+    "info": {
+        "page": 1,
+        "pages": 23931,
+        "results": 71793
+    },
+    "plugins": [
+        {
+            "name": "ImmoWP Gestion Immobiliere",
+            "slug": "immowp-gestion-immobiliere",
+            "version": "2.0.3",
+            "author": "<a href=\"https://profiles.wordpress.org/meerimmo/\">ImmoWP</a>",
+            "author_profile": "https://profiles.wordpress.org/meerimmo/",
+            "contributors": {
+                "immowp": {
+                    "profile": "https://profiles.wordpress.org/immowp/",
+                    "avatar": "https://secure.gravatar.com/avatar/2b3c6e6e05140eac056710948516b56689e2437c6969cc7b7a62081271d3616f?s=96&d=monsterid&r=g",
+                    "display_name": "immowp"
+                }
+            },
+            "requires": "6.0",
+            "tested": "7.1",
+            "requires_php": "7.4",
+            "requires_plugins": [],
+            "rating": 0,
+            "ratings": {
+                "5": 0,
+                "4": 0,
+                "3": 0,
+                "2": 0,
+                "1": 0
+            },
+            "num_ratings": 0,
+            "support_threads": 2,
+            "support_threads_resolved": 1,
+            "active_installs": 60,
+            "downloaded": 854,
+            "last_updated": "2026-09-07 4:21pm GMT",
+            "added": "2026-01-06",
+            "homepage": "https://wordpress.org/plugins/immowp-gestion-immobiliere/",
+            "short_description": "Real estate listings for WordPress \u2014 property post type, search filters, French DPE/GES labels, OpenStreetMap map. Annonces immobili\u00e8res.",
+            "download_link": "https://downloads.wordpress.org/plugin/immowp-gestion-immobiliere.2.0.3.zip",
+            "tags": {
+                "agence-immobiliere": "agence immobili\u00e8re",
+                "immobilier": "immobilier",
+                "listings": "listings",
+                "property": "property",
+                "real-estate": "real-estate"
+            },
+            "donate_link": ""
+        },
+        {
+            "name": "Auto Attribute Assigner",
+            "slug": "auto-attribute-assigner",
+            "version": "2.0",
+            "author": "<a href=\"https://profiles.wordpress.org/phoferedv/\">NorixIT</a>",
+            "author_profile": "https://profiles.wordpress.org/phoferedv/",
+            "contributors": {
+                "phoferedv": {
+                    "profile": "https://profiles.wordpress.org/phoferedv/",
+                    "avatar": "https://secure.gravatar.com/avatar/cf3ee756821c0b6d05b626a6eea15919773cfc876d41350f20baa9c87d9f54fa?s=96&d=monsterid&r=g",
+                    "display_name": "NorixIT"
+                }
+            },
+            "requires": "5.0",
+            "tested": "7.1",
+            "requires_php": "7.2",
+            "requires_plugins": [
+                "woocommerce"
+            ],
+            "rating": 0,
+            "ratings": {
+                "5": 0,
+                "4": 0,
+                "3": 0,
+                "2": 0,
+                "1": 0
+            },
+            "num_ratings": 0,
+            "support_threads": 1,
+            "support_threads_resolved": 1,
+            "active_installs": 0,
+            "downloaded": 1698,
+            "last_updated": "2026-09-07 4:18pm GMT",
+            "added": "2025-05-12",
+            "homepage": "",
+            "short_description": "Automatically assign WooCommerce product attributes to your products based on their categories - now completely free, with no limits.",
+            "download_link": "https://downloads.wordpress.org/plugin/auto-attribute-assigner.2.0.zip",
+            "tags": {
+                "attributes": "attributes",
+                "categories": "categories",
+                "ecommerce": "ecommerce",
+                "product-attributes": "product attributes",
+                "woocommerce": "woocommerce"
+            },
+            "donate_link": "https://www.paypal.com/donate/?hosted_button_id=B693ZGH5KM3MJ"
+        },
+        {
+            "name": "Sumotori Dash Agent",
+            "slug": "sumotori-dash-agent",
+            "version": "1.5.0",
+            "author": "<a href=\"https://profiles.wordpress.org/tommybordas/\">Tommy Bordas</a>",
+            "author_profile": "https://profiles.wordpress.org/tommybordas/",
+            "contributors": {
+                "tommybordas": {
+                    "profile": "https://profiles.wordpress.org/tommybordas/",
+                    "avatar": "https://secure.gravatar.com/avatar/a5e198119068189ecd5834398dafe17e67374a57d2f66a9187354e86c7922bda?s=96&d=monsterid&r=g",
+                    "display_name": "Tommy Bordas"
+                }
+            },
+            "requires": "5.2",
+            "tested": "7.1",
+            "requires_php": "7.0",
+            "requires_plugins": [],
+            "rating": 0,
+            "ratings": {
+                "5": 0,
+                "4": 0,
+                "3": 0,
+                "2": 0,
+                "1": 0
+            },
+            "num_ratings": 0,
+            "support_threads": 0,
+            "support_threads_resolved": 0,
+            "active_installs": 0,
+            "downloaded": 31,
+            "last_updated": "2026-09-07 4:18pm GMT",
+            "added": "2026-09-07",
+            "homepage": "https://github.com/tommybds/wp-dashboard",
+            "short_description": "Connects this site to a monitoring dashboard you choose: reports administration events and answers signed, read-only inventory requests.",
+            "download_link": "https://downloads.wordpress.org/plugin/sumotori-dash-agent.1.5.0.zip",
+            "tags": {
+                "inventory": "inventory",
+                "maintenance": "maintenance",
+                "management": "management",
+                "monitoring": "monitoring",
+                "multisite": "multisite"
+            },
+            "donate_link": ""
+        }
+    ]
+}

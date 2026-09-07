@@ -1,11 +1,12 @@
 """Configuration class for the WordPress.org plugin client."""
 
-from .base_client_config import DEFAULT_USER_AGENT, BaseClientConfig
+from .base_client_config import DEFAULT_USER_AGENT
+from .repository_client_config import RepositoryClientConfig
 
 DEFAULT_BASE_URL = "https://plugins.svn.wordpress.org"
 
 
-class PluginClientConfig(BaseClientConfig):
+class PluginClientConfig(RepositoryClientConfig):
 	"""Configuration for :class:`~wordpress_org_repository.plugin_client.PluginClient`."""
 
 	def __init__(

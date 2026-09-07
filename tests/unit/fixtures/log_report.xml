@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<S:log-report xmlns:S="svn:" xmlns:D="DAV:">
+<S:log-item>
+<S:modified-path node-kind="file" text-mods="true" prop-mods="false">/hello-dolly/tags/1.7.2/readme.txt</S:modified-path>
+<S:deleted-path node-kind="dir" text-mods="false" prop-mods="false">/hello-dolly/tags/1.7.3</S:deleted-path>
+<S:modified-path node-kind="file" text-mods="true" prop-mods="false">/hello-dolly/trunk/readme.txt</S:modified-path>
+<D:version-name>3383710</D:version-name>
+<S:date>2025-10-24T04:13:10.489435Z</S:date>
+<D:comment>Hello Dolly: Update the Tested-up-to value to 6.9 in preperation for WordPress 6.9. Delete the 1.7.3 tag as it was never properly bumped and contained v1.7.2.</D:comment>
+<D:creator-displayname>dd32</D:creator-displayname>
+</S:log-item>
+<S:log-item>
+<S:modified-path node-kind="file" text-mods="true" prop-mods="false">/hello-dolly/tags/1.7.3/readme.txt</S:modified-path>
+<S:modified-path node-kind="file" text-mods="true" prop-mods="false">/hello-dolly/trunk/readme.txt</S:modified-path>
+<D:version-name>3289318</D:version-name>
+<D:creator-displayname>Otto42</D:creator-displayname>
+<S:date>2025-05-07T16:50:12.748552Z</S:date>
+<D:comment>Update tested up to value.</D:comment>
+</S:log-item>
+</S:log-report>

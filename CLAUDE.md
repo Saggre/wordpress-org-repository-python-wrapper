@@ -33,22 +33,43 @@ uv run pdoc wordpress_org_repository -o docs
 ## Architecture
 
 This is a general Python library with no runtime dependencies. It wraps the WordPress.org SVN
-repositories for plugins and themes via WebDAV. It is a port of
-`wordpress-org-repository-php-wrapper`.
+repositories for plugins and themes via WebDAV, the plugin API, and the plugin distribution host. It
+is a port of `wordpress-org-repository-php-wrapper` and tracks its releases.
 
-**Transport layer:** `filesystem/webdav.py` holds `WebDavFilesystem`, a small stand-in for the PHP
-version's SabreDAV client and League Flysystem filesystem. It speaks only the two verbs the library
-needs: `GET` for file contents and `PROPFIND` with `Depth: 1` for a shallow directory listing, both
-built on `urllib.request`. Listings are parsed with `xml.etree.ElementTree` into `FileAttributes`
-and `DirectoryAttributes`, whose `json_serialize()` output matches Flysystem's key for key.
+**Transport layer:** `transport.py` holds `HttpClient`, a thin `urllib` wrapper whose `send()` returns
+every response as an `HttpResponse`, error statuses included, because the WordPress.org APIs put
+meaningful bodies on them. A transport failure, such as a DNS or connection error, raises
+`ClientException` with no `status`. Every client accepts an `http_client` keyword argument, which is
+the seam the unit tests use to inject `tests/unit/stub.py`.
 
-**Clients:** `BaseClient` reads through the filesystem. `PluginClient` and `ThemeClient` add nothing
-beyond their config and, for plugins, `get_tags_directory()`.
+**Repository filesystem:** `filesystem/webdav.py` holds `WebDavFilesystem`, a small stand-in for the
+PHP version's SabreDAV client and League Flysystem filesystem, built on `HttpClient`. It speaks
+`GET` for file contents, `PROPFIND` with `Depth: 1` for directory listings, and `REPORT` for the SVN
+log. A deep listing is one shallow listing per subdirectory, the way Flysystem does it, because the
+repository refuses `Depth: infinity`. Listings are parsed with `xml.etree.ElementTree` into
+`FileAttributes` and `DirectoryAttributes`, whose `json_serialize()` output matches Flysystem's key
+for key.
 
-**Config:** `PluginClientConfig` and `ThemeClientConfig` extend `BaseClientConfig`. They hold `slug`,
-`version`, `base_url` and `user_agent`. Version `'trunk'` maps to the trunk path; any other value
-maps to `tags/<version>` for plugins. Themes have no tags directory, so `ThemeClient` overrides
-`_get_path`.
+**Repository clients:** `BaseClient` reads files and directories through the filesystem, exports a
+version to a local directory, and reads commit logs through `util/log_report.py`, which builds the
+`REPORT` body and parses the response into `LogEntry` and `LogPath`. `PluginClient` and
+`ThemeClient` add nothing beyond their config and, for plugins, `get_tags_directory()`.
+
+**API clients:** `plugin_api_client.py` reads plugin metadata from `api.wordpress.org` into the
+`model/` value objects (`PluginInfo`, `PluginQueryResult`, `PluginStatus`). Query parameters are
+nested under `request[...]` the way PHP's `http_build_query` does it. A closed plugin comes back as
+a 404 whose body is the answer, so `get_plugin_status()` reads it while `get_plugin_information()`
+raises. `plugin_download_client.py` downloads release archives from `downloads.wordpress.org`.
+Both raise `ClientException`, whose `status` is the HTTP status of the failed response.
+
+**Config:** `BaseClientConfig` holds `base_url` and `user_agent`. `RepositoryClientConfig` adds
+`slug` and `version` and is what `PluginClientConfig` and `ThemeClientConfig` extend. Version
+`'trunk'` maps to the trunk path; any other value maps to `tags/<version>` for plugins. Themes have
+no tags directory, so `ThemeClient` overrides `_get_path`. `PluginApiClientConfig` and
+`PluginDownloadClientConfig` extend `BaseClientConfig` directly.
+
+**Dates:** `util/date.py` parses every date shape WordPress.org uses. Values without a zone are read
+as UTC, never as host time, so results do not depend on the environment.
 
 **Path construction:** `BaseClient._get_path()` uses `util.Path` to build the full SVN path:
 `/<slug>/<version>/<file>` for trunk or `/<slug>/tags/<version>/<file>` for tagged plugin releases.
@@ -57,8 +78,9 @@ maps to `tags/<version>` for plugins. Themes have no tags directory, so `ThemeCl
 generator, so the request is only made once the listing is iterated. `UnableToListContents` is
 therefore raised on iteration, not on the call, matching Flysystem.
 
-**Tests:** `tests/unit/` covers pure logic; `tests/functional/` hits the live WordPress.org SVN
-endpoints and is marked with the `network` marker. Functional tests compare against snapshots in
+**Tests:** `tests/unit/` covers pure logic and the clients against a stubbed transport, with API
+payloads under `tests/unit/fixtures/`. `tests/functional/` hits the live WordPress.org endpoints and
+is marked with the `network` marker. Functional repository tests compare against snapshots in
 `tests/functional/expected/<slug>/<version>/`. Directory listings are stored as `index.json`; file
 snapshots are stored byte for byte.
 
@@ -72,16 +94,22 @@ are off and `ruff format` is configured with `indent-style = "tab"`.
 `version.py` is the single source of the version. Hatchling reads `__version__` from it, so
 `pyproject.toml` declares the version as dynamic rather than repeating it.
 
-Snapshot files must keep LF endings. `.gitattributes` disables end-of-line conversion under `tests/functional/expected/`, and file
-snapshots are compared as bytes rather than text so a CRLF checkout cannot corrupt them.
+Snapshot files must keep LF endings. `.gitattributes` disables end-of-line conversion under
+`tests/functional/expected/`, and file snapshots are compared as bytes rather than text so a CRLF
+checkout cannot corrupt them.
+
+Exception messages are copied from the PHP original word for word, so a port of a PHP test can
+assert on them unchanged.
 
 ## Differences from the PHP original
 
 - `get_file()` returns `bytes` rather than a string, so binary files work unchanged.
 - `InvalidArgumentException` becomes `ValueError`.
 - PHP's `empty()` treats the string `'0'` as empty, so a slug or version of `'0'` is rejected there
-  and accepted here. The same applies to `Path`, which drops a `'0'` segment in PHP but keeps it
-  here.
+  and accepted here.
+- `ClientException` exposes the HTTP status as `status`, where PHP uses the exception code.
+- `Contributor.from_dict()` reads a bare profile URL string, which the plugins/info/1.0 endpoint
+  returns, as the profile. PHP casts it to an array and drops it.
 - The directory-listing snapshots use Flysystem's real `snake_case` keys. Two of the PHP snapshots
   still carry stale `camelCase` keys, which its tests do not catch because
   `assertEqualsCanonicalizing` sorts the keys away.
