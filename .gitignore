@@ -1,0 +1,23 @@
+# Virtual environments
+.venv/
+venv/
+
+# Python
+__pycache__/
+*.py[cod]
+build/
+dist/
+*.egg-info/
+
+# Tests
+.pytest_cache/
+.coverage
+coverage.xml
+junit.xml
+
+# IDE
+.idea
+_docs
+
+# Docs
+/docs/

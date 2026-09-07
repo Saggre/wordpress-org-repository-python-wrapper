@@ -1,0 +1,133 @@
+[
+    {
+        "type": "file",
+        "path": "wordpress-seo/tags/25.5/wp-seo.php",
+        "file_size": 1658,
+        "visibility": null,
+        "last_modified": 1752568680,
+        "mime_type": "text/xml; charset=\"utf-8\"",
+        "extra_metadata": {}
+    },
+    {
+        "type": "dir",
+        "path": "wordpress-seo/tags/25.5/admin",
+        "visibility": null,
+        "last_modified": 1752137378,
+        "extra_metadata": {}
+    },
+    {
+        "type": "file",
+        "path": "wordpress-seo/tags/25.5/wp-seo-main.php",
+        "file_size": 17035,
+        "visibility": null,
+        "last_modified": 1752568680,
+        "mime_type": "text/xml; charset=\"utf-8\"",
+        "extra_metadata": {}
+    },
+    {
+        "type": "dir",
+        "path": "wordpress-seo/tags/25.5/src",
+        "visibility": null,
+        "last_modified": 1752137378,
+        "extra_metadata": {}
+    },
+    {
+        "type": "dir",
+        "path": "wordpress-seo/tags/25.5/css",
+        "visibility": null,
+        "last_modified": 1752568680,
+        "extra_metadata": {}
+    },
+    {
+        "type": "dir",
+        "path": "wordpress-seo/tags/25.5/vendor",
+        "visibility": null,
+        "last_modified": 1752568680,
+        "extra_metadata": {}
+    },
+    {
+        "type": "dir",
+        "path": "wordpress-seo/tags/25.5/vendor_prefixed",
+        "visibility": null,
+        "last_modified": 1718702102,
+        "extra_metadata": {}
+    },
+    {
+        "type": "dir",
+        "path": "wordpress-seo/tags/25.5/images",
+        "visibility": null,
+        "last_modified": 1751370860,
+        "extra_metadata": {}
+    },
+    {
+        "type": "file",
+        "path": "wordpress-seo/tags/25.5/readme.txt",
+        "file_size": 15320,
+        "visibility": null,
+        "last_modified": 1752568680,
+        "mime_type": "text/xml; charset=\"utf-8\"",
+        "extra_metadata": {}
+    },
+    {
+        "type": "dir",
+        "path": "wordpress-seo/tags/25.5/packages",
+        "visibility": null,
+        "last_modified": 1744019165,
+        "extra_metadata": {}
+    },
+    {
+        "type": "dir",
+        "path": "wordpress-seo/tags/25.5/lib",
+        "visibility": null,
+        "last_modified": 1744019165,
+        "extra_metadata": {}
+    },
+    {
+        "type": "dir",
+        "path": "wordpress-seo/tags/25.5/blocks",
+        "visibility": null,
+        "last_modified": 1716476931,
+        "extra_metadata": {}
+    },
+    {
+        "type": "dir",
+        "path": "wordpress-seo/tags/25.5/inc",
+        "visibility": null,
+        "last_modified": 1751370860,
+        "extra_metadata": {}
+    },
+    {
+        "type": "file",
+        "path": "wordpress-seo/tags/25.5/index.php",
+        "file_size": 38,
+        "visibility": null,
+        "last_modified": 1437485849,
+        "mime_type": "text/xml; charset=\"utf-8\"",
+        "extra_metadata": {}
+    },
+    {
+        "type": "file",
+        "path": "wordpress-seo/tags/25.5/wpml-config.xml",
+        "file_size": 2131,
+        "visibility": null,
+        "last_modified": 1664975468,
+        "mime_type": "text/xml; charset=\"utf-8\"",
+        "extra_metadata": {}
+    },
+    {
+        "type": "file",
+        "path": "wordpress-seo/tags/25.5/license.txt",
+        "file_size": 33319,
+        "visibility": null,
+        "last_modified": 1521562744,
+        "mime_type": "text/xml; charset=\"utf-8\"",
+        "extra_metadata": {}
+    },
+    {
+        "type": "dir",
+        "path": "wordpress-seo/tags/25.5/js",
+        "visibility": null,
+        "last_modified": 1752137378,
+        "extra_metadata": {}
+    }
+]

@@ -1,0 +1,103 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "wordpress-org-repository-python-wrapper"
+dynamic = ["version"]
+description = "A WordPress.org Repository API wrapper for Python"
+readme = "README.md"
+requires-python = ">=3.10"
+license = "LGPL-3.0-only"
+license-files = ["LICENSE.md"]
+authors = [
+  { name = "Sakri Koskimies", email = "sakri.koskimies@hotmail.com" },
+]
+keywords = ["wordpress", "plugin", "theme", "api", "repository", "wordpress.org"]
+classifiers = [
+  "Development Status :: 5 - Production/Stable",
+  "Intended Audience :: Developers",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Topic :: Software Development :: Libraries",
+  "Typing :: Typed",
+]
+dependencies = []
+
+[project.urls]
+Repository = "https://github.com/Saggre/wordpress-org-repository-python-wrapper"
+
+[dependency-groups]
+dev = [
+  "pytest>=8.3",
+  "pytest-cov>=6.0",
+  "mypy>=1.14",
+  "ruff>=0.9",
+  "pdoc>=15.0",
+]
+
+[tool.hatch.version]
+path = "src/wordpress_org_repository/version.py"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/wordpress_org_repository"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra --strict-markers --strict-config"
+markers = [
+  "network: hits the live WordPress.org SVN repositories",
+]
+
+[tool.coverage.run]
+source = ["wordpress_org_repository"]
+
+[tool.mypy]
+python_version = "3.10"
+strict = true
+files = ["src", "tests"]
+
+[tool.ruff]
+line-length = 160
+indent-width = 4
+
+[tool.ruff.format]
+indent-style = "tab"
+
+[tool.ruff.lint]
+select = ["ALL"]
+ignore = [
+  # Indentation is tabs by project convention, which these rules assume it is not.
+  "W191",
+  "D206",
+  # Conflicting docstring rules; D211 and D212 are the ones kept.
+  "D203",
+  "D213",
+  # Rules the formatter already owns.
+  "COM812",
+  "ISC001",
+  # No copyright header on every file.
+  "CPY001",
+  # Exception messages are passed inline so they match the PHP original word for word.
+  "EM101",
+  "EM102",
+  "TRY003",
+  # Relative imports inside the package are intentional.
+  "TID252",
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = [
+  # assert is how pytest expresses expectations.
+  "S101",
+]
+
+[tool.ruff.lint.pydocstyle]
+convention = "pep257"
+
+[tool.ruff.lint.flake8-import-conventions.aliases]
+# ElementTree reads better than the conventional ET in this small parser.
+"xml.etree.ElementTree" = "ElementTree"

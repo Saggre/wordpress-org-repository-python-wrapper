@@ -1,0 +1,4 @@
+* text=auto eol=lf
+
+# Snapshots are compared byte for byte, so never rewrite their line endings.
+tests/functional/expected/** -text

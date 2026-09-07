@@ -1,0 +1,72 @@
+[
+    {
+        "type": "file",
+        "path": "woocommerce/tags/9.6.2/i18n/countries.php",
+        "file_size": 11402,
+        "visibility": null,
+        "last_modified": 1653413896,
+        "mime_type": "text/xml; charset=\"utf-8\"",
+        "extra_metadata": {}
+    },
+    {
+        "type": "file",
+        "path": "woocommerce/tags/9.6.2/i18n/phone.php",
+        "file_size": 4415,
+        "visibility": null,
+        "last_modified": 1597951129,
+        "mime_type": "text/xml; charset=\"utf-8\"",
+        "extra_metadata": {}
+    },
+    {
+        "type": "file",
+        "path": "woocommerce/tags/9.6.2/i18n/units.php",
+        "file_size": 680,
+        "visibility": null,
+        "last_modified": 1677032253,
+        "mime_type": "text/xml; charset=\"utf-8\"",
+        "extra_metadata": {}
+    },
+    {
+        "type": "file",
+        "path": "woocommerce/tags/9.6.2/i18n/states.php",
+        "file_size": 98201,
+        "visibility": null,
+        "last_modified": 1734542355,
+        "mime_type": "text/xml; charset=\"utf-8\"",
+        "extra_metadata": {}
+    },
+    {
+        "type": "file",
+        "path": "woocommerce/tags/9.6.2/i18n/continents.php",
+        "file_size": 3102,
+        "visibility": null,
+        "last_modified": 1600809409,
+        "mime_type": "text/xml; charset=\"utf-8\"",
+        "extra_metadata": {}
+    },
+    {
+        "type": "file",
+        "path": "woocommerce/tags/9.6.2/i18n/locale-info.php",
+        "file_size": 115784,
+        "visibility": null,
+        "last_modified": 1734542355,
+        "mime_type": "text/xml; charset=\"utf-8\"",
+        "extra_metadata": {}
+    },
+    {
+        "type": "file",
+        "path": "woocommerce/tags/9.6.2/i18n/currency-info.php",
+        "file_size": 33510,
+        "visibility": null,
+        "last_modified": 1716892100,
+        "mime_type": "text/xml; charset=\"utf-8\"",
+        "extra_metadata": {}
+    },
+    {
+        "type": "dir",
+        "path": "woocommerce/tags/9.6.2/i18n/languages",
+        "visibility": null,
+        "last_modified": 1739448932,
+        "extra_metadata": {}
+    }
+]

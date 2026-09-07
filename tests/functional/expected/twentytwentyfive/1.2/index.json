@@ -1,0 +1,82 @@
+[
+    {
+        "type": "dir",
+        "path": "twentytwentyfive/1.2/assets",
+        "visibility": null,
+        "last_modified": 1731448615,
+        "extra_metadata": {}
+    },
+    {
+        "type": "file",
+        "path": "twentytwentyfive/1.2/readme.txt",
+        "file_size": 8820,
+        "visibility": null,
+        "last_modified": 1744723709,
+        "mime_type": "text/xml; charset=\"utf-8\"",
+        "extra_metadata": {}
+    },
+    {
+        "type": "file",
+        "path": "twentytwentyfive/1.2/functions.php",
+        "file_size": 4254,
+        "visibility": null,
+        "last_modified": 1731448615,
+        "mime_type": "text/xml; charset=\"utf-8\"",
+        "extra_metadata": {}
+    },
+    {
+        "type": "dir",
+        "path": "twentytwentyfive/1.2/templates",
+        "visibility": null,
+        "last_modified": 1731448615,
+        "extra_metadata": {}
+    },
+    {
+        "type": "file",
+        "path": "twentytwentyfive/1.2/screenshot.png",
+        "file_size": 216683,
+        "visibility": null,
+        "last_modified": 1731448615,
+        "mime_type": "application/octet-stream",
+        "extra_metadata": {}
+    },
+    {
+        "type": "dir",
+        "path": "twentytwentyfive/1.2/patterns",
+        "visibility": null,
+        "last_modified": 1744723709,
+        "extra_metadata": {}
+    },
+    {
+        "type": "dir",
+        "path": "twentytwentyfive/1.2/styles",
+        "visibility": null,
+        "last_modified": 1739294604,
+        "extra_metadata": {}
+    },
+    {
+        "type": "file",
+        "path": "twentytwentyfive/1.2/style.css",
+        "file_size": 2503,
+        "visibility": null,
+        "last_modified": 1744723709,
+        "mime_type": "text/xml; charset=\"utf-8\"",
+        "extra_metadata": {}
+    },
+    {
+        "type": "dir",
+        "path": "twentytwentyfive/1.2/parts",
+        "visibility": null,
+        "last_modified": 1731448615,
+        "extra_metadata": {}
+    },
+    {
+        "type": "file",
+        "path": "twentytwentyfive/1.2/theme.json",
+        "file_size": 14856,
+        "visibility": null,
+        "last_modified": 1744723709,
+        "mime_type": "text/xml; charset=\"utf-8\"",
+        "extra_metadata": {}
+    }
+]
