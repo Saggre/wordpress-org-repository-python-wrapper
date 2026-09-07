@@ -2,6 +2,8 @@
 
 Use cases: Plugin and theme directory data, update checks, analysis.
 
+[![codecov](https://img.shields.io/codecov/c/github/Saggre/wordpress-org-repository-python-wrapper)](https://codecov.io/gh/Saggre/wordpress-org-repository-python-wrapper)
+
 This library provides a simple way to access the WordPress.org [plugins](https://wordpress.org/plugins/)
 and [themes](https://wordpress.org/themes/) repositories. It allows you to retrieve raw plugin and theme files and list
 directories.
