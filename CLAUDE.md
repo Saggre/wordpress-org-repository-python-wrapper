@@ -40,7 +40,9 @@ is a port of `wordpress-org-repository-php-wrapper` and tracks its releases.
 every response as an `HttpResponse`, error statuses included, because the WordPress.org APIs put
 meaningful bodies on them. A transport failure, such as a DNS or connection error, raises
 `ClientException` with no `status`. Every client accepts an `http_client` keyword argument, which is
-the seam the unit tests use to inject `tests/unit/stub.py`.
+the seam the unit tests use to inject `tests/unit/stub.py`. A gzip encoded body is decompressed
+transparently; only the repository requests ask for one, since commit logs compress by more than an
+order of magnitude.
 
 **Repository filesystem:** `filesystem/webdav.py` holds `WebDavFilesystem`, a small stand-in for the
 PHP version's SabreDAV client and League Flysystem filesystem, built on `HttpClient`. It speaks
@@ -52,8 +54,13 @@ for key.
 
 **Repository clients:** `BaseClient` reads files and directories through the filesystem, exports a
 version to a local directory, and reads commit logs through `util/log_report.py`, which builds the
-`REPORT` body and parses the response into `LogEntry` and `LogPath`. `PluginClient` and
-`ThemeClient` add nothing beyond their config and, for plugins, `get_tags_directory()`.
+`REPORT` body and parses the response into `LogEntry` and `LogPath`. `get_changed_paths()` scopes a
+revision range to a subtree; the server only answers a `REPORT` at the repository root or a plugin
+root, so the narrower scope goes into the request body rather than the target. `PluginClient` adds
+`get_tags_directory()`, `get_tag_revisions()`, which reads the whole tag history in one request and
+keys it by version in revision order, and `diff_versions()`, which reads the range between two tags
+and reduces it to one entry per file with `_normalize_paths()`. `ThemeClient` adds nothing beyond its
+config.
 
 **API clients:** `plugin_api_client.py` reads plugin metadata from `api.wordpress.org` into the
 `model/` value objects (`PluginInfo`, `PluginQueryResult`, `PluginStatus`). Query parameters are
@@ -108,6 +115,8 @@ assert on them unchanged.
 - PHP's `empty()` treats the string `'0'` as empty, so a slug or version of `'0'` is rejected there
   and accepted here.
 - `ClientException` exposes the HTTP status as `status`, where PHP uses the exception code.
+- `get_tag_revisions()` returns a `dict` and `diff_versions()` a `dict[str, LogPath]`, both relying on
+  insertion order the way the PHP arrays do.
 - `Contributor.from_dict()` reads a bare profile URL string, which the plugins/info/1.0 endpoint
   returns, as the profile. PHP casts it to an array and drops it.
 - The directory-listing snapshots use Flysystem's real `snake_case` keys. Two of the PHP snapshots

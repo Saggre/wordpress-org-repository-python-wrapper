@@ -9,7 +9,7 @@ from .config import (
 	RepositoryClientConfig,
 	ThemeClientConfig,
 )
-from .exceptions import ClientException
+from .exceptions import ClientException, TagNotFoundException
 from .filesystem import (
 	DirectoryAttributes,
 	DirectoryListing,
@@ -67,6 +67,7 @@ __all__ = [
 	"PluginStatus",
 	"RepositoryClientConfig",
 	"StorageAttributes",
+	"TagNotFoundException",
 	"ThemeClient",
 	"ThemeClientConfig",
 	"UnableToListContents",

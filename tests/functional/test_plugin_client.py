@@ -11,6 +11,7 @@ from wordpress_org_repository import (
 	LogPathAction,
 	PluginClient,
 	PluginClientConfig,
+	TagNotFoundException,
 	UnableToListContents,
 )
 
@@ -158,3 +159,67 @@ def test_get_repository_log_reads_every_plugin() -> None:
 
 	for entry in log:
 		assert entry.paths
+
+
+def test_get_changed_paths_scopes_to_a_subtree() -> None:
+	"""Scoping to the tags subtree selects only the revisions that touched it."""
+	client = PluginClient(PluginClientConfig("hello-dolly"))
+	log = client.get_changed_paths(2995248, 2995248, "tags")
+
+	assert len(log) == 1
+	assert log[0].paths[0].path == "/hello-dolly/tags/1.7.3"
+
+
+def test_get_tag_revisions_resolves_published_versions() -> None:
+	"""Every published version maps to the revision that created its tag."""
+	client = PluginClient(PluginClientConfig("gdpr-cookie-consent"))
+	tags = client.get_tag_revisions()
+
+	assert tags["4.4.3"].revision == 3679495
+	assert tags["4.4.4"].revision == 3686273
+
+	# A tag is a directory copy, so it also names the trunk revision the release was cut from.
+	copy = next(path for path in tags["4.4.4"].paths if path.path == "/gdpr-cookie-consent/tags/4.4.4")
+
+	assert copy.action is LogPathAction.ADDED
+	assert copy.node_kind == "dir"
+	assert copy.copy_from_path == "/gdpr-cookie-consent/trunk"
+	assert copy.copy_from_revision == 3686084
+
+
+def test_get_tag_revisions_orders_a_version_series_by_revision() -> None:
+	"""Ordering by revision keeps 1.10.0 after 1.9.4, which sorting as text would not."""
+	client = PluginClient(PluginClientConfig("wp-super-cache"))
+	versions = list(client.get_tag_revisions())
+
+	assert versions.index("1.10.0") > versions.index("1.9.4"), "Releases are sorted as text, where 1.10.0 precedes 1.9.4."
+	assert versions.index("1.9.4") > versions.index("1.1.1")
+
+
+def test_diff_versions_finds_the_changed_files() -> None:
+	"""The diff of two releases lists their changed files, relative to the plugin root."""
+	client = PluginClient(PluginClientConfig("gdpr-cookie-consent"))
+	paths = client.diff_versions("4.4.3", "4.4.4")
+	php = [path for path in paths if path.endswith(".php")]
+
+	# Matches a byte comparison of the two extracted trees.
+	assert len(php) == 11
+	assert "gdpr-cookie-consent.php" in php
+	assert "admin/views/wizard.php" in php
+
+	for key, path in paths.items():
+		assert path.path == key, "Paths are keyed by something other than themselves."
+		assert path.node_kind == "file", "The tag copy is reported as a change."
+		assert not path.path.startswith("/"), "The repository prefix was not stripped."
+		assert "tags/4.4.4" not in path.path
+
+
+def test_diff_versions_throws_on_an_untagged_version() -> None:
+	"""A version that was never tagged raises rather than comparing the wrong pair."""
+	client = PluginClient(PluginClientConfig("gdpr-cookie-consent"))
+
+	with pytest.raises(
+		TagNotFoundException,
+		match=r'^Version "99\.99\.99" of "gdpr-cookie-consent" has no tag in the repository\.$',
+	):
+		client.diff_versions("4.4.3", "99.99.99")

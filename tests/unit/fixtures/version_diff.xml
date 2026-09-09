@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<S:log-report xmlns:S="svn:" xmlns:D="DAV:">
+<S:log-item>
+<S:added-path node-kind="dir" text-mods="false" prop-mods="false" copyfrom-path="/demo-plugin/trunk" copyfrom-rev="119">/demo-plugin/tags/1.10.4</S:added-path>
+<S:modified-path node-kind="file" text-mods="true" prop-mods="false">/demo-plugin/tags/1.10.4/admin/settings.php</S:modified-path>
+<S:modified-path node-kind="file" text-mods="true" prop-mods="false">/demo-plugin/tags/1.10.4/readme.txt</S:modified-path>
+<S:modified-path node-kind="file" text-mods="false" prop-mods="true">/demo-plugin/tags/1.10.4/style.css</S:modified-path>
+<S:modified-path node-kind="file" text-mods="true" prop-mods="false">/demo-plugin/tags/1.9.0/legacy.php</S:modified-path>
+<S:modified-path node-kind="file" text-mods="true" prop-mods="false">/demo-plugin/trunk/admin/settings.php</S:modified-path>
+<S:modified-path node-kind="file" text-mods="true" prop-mods="false">/demo-plugin/trunk/readme.txt</S:modified-path>
+<S:modified-path node-kind="file" text-mods="true" prop-mods="false">/demo-plugin/trunk/style.css</S:modified-path>
+<D:version-name>120</D:version-name>
+<S:date>2025-07-01T10:00:00.000000Z</S:date>
+<D:comment>Adding version 1.10.4</D:comment>
+<D:creator-displayname>vendor</D:creator-displayname>
+</S:log-item>
+<S:log-item>
+<S:added-path node-kind="dir" text-mods="false" prop-mods="false">/demo-plugin/trunk/includes</S:added-path>
+<S:added-path node-kind="file" text-mods="true" prop-mods="false">/demo-plugin/trunk/includes/new-feature.php</S:added-path>
+<S:deleted-path node-kind="file" text-mods="false" prop-mods="false">/demo-plugin/trunk/includes/old.php</S:deleted-path>
+<S:deleted-path node-kind="dir" text-mods="false" prop-mods="false">/demo-plugin/trunk/includes/legacy</S:deleted-path>
+<D:version-name>115</D:version-name>
+<S:date>2025-06-15T10:00:00.000000Z</S:date>
+<D:comment>Split the includes directory</D:comment>
+<D:creator-displayname>vendor</D:creator-displayname>
+</S:log-item>
+<S:log-item>
+<S:modified-path node-kind="file" text-mods="true" prop-mods="false">/demo-plugin/trunk/includes/old.php</S:modified-path>
+<D:version-name>112</D:version-name>
+<S:date>2025-06-10T10:00:00.000000Z</S:date>
+<D:comment>Last edit before the split</D:comment>
+<D:creator-displayname>vendor</D:creator-displayname>
+</S:log-item>
+</S:log-report>

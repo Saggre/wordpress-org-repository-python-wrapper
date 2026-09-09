@@ -1,6 +1,7 @@
 """Encoding and decoding of the SVN log-report protocol used by the REPORT method."""
 
 from xml.etree import ElementTree
+from xml.sax.saxutils import escape
 
 from ..exceptions import ClientException
 from ..model.log_entry import LogEntry
@@ -29,12 +30,28 @@ PATH_ELEMENTS = {
 }
 
 
-def create_request_body(limit: int, start_revision: int | None = None, end_revision: int = 0) -> str:
+def create_request_body(limit: int, start_revision: int | None = None, end_revision: int = 0, path: str = "") -> str:
 	"""Build the request body of a log-report.
 
 	Revisions are returned newest first, starting from start_revision or the
-	youngest revision when it is None, and stopping at end_revision.
+	youngest revision when it is None, and stopping at end_revision. A limit of
+	0 means no limit, and path restricts the revisions to a path relative to the
+	report target.
+
+	The end revision is always sent. Without it, or with a negative one, the
+	server answers 200 with an empty report, which reads as a plugin with no
+	history rather than as the malformed request it is. An inverted range is
+	rejected too: the server would answer it oldest first, which breaks the
+	newest first order every caller relies on.
+
+	Raises ValueError on a negative end revision or an inverted range.
 	"""
+	if end_revision < 0:
+		raise ValueError("The end revision cannot be negative.")
+
+	if start_revision is not None and start_revision < end_revision:
+		raise ValueError(f"The start revision {start_revision} is older than the end revision {end_revision}.")
+
 	lines = [
 		'<?xml version="1.0" encoding="utf-8"?>',
 		f'<S:log-report xmlns:S="{NAMESPACE_SVN}" xmlns:D="{NAMESPACE_DAV}">',
@@ -51,7 +68,7 @@ def create_request_body(limit: int, start_revision: int | None = None, end_revis
 			"<S:revprop>svn:author</S:revprop>",
 			"<S:revprop>svn:date</S:revprop>",
 			"<S:revprop>svn:log</S:revprop>",
-			"<S:path></S:path>",
+			f"<S:path>{escape(path)}</S:path>",
 			"</S:log-report>",
 		]
 	)
@@ -101,6 +118,8 @@ def _paths(item: ElementTree.Element) -> list[LogPath]:
 				node_kind=element.get("node-kind") or None,
 				copy_from_path=element.get("copyfrom-path") or None,
 				copy_from_revision=int(copy_from_revision) if copy_from_revision else None,
+				text_mods=element.get("text-mods") == "true",
+				prop_mods=element.get("prop-mods") == "true",
 			)
 		)
 
