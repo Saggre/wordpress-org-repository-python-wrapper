@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.1] - 2026-09-09
+
+Mirrors `wordpress-org-repository-php-wrapper` 1.2.1.
+
+### Changed
+
+- `PluginClient.get_tag_revisions()` and `PluginClient.diff_versions()` take a limit on the number of tag revisions to
+  read. Resolving a tag used to read the whole tag history, which for a plugin with hundreds of releases is nearly the
+  entire cost of a diff.
+
 ## [1.2.0] - 2026-09-09
 
 Mirrors `wordpress-org-repository-php-wrapper` 1.2.0.
@@ -58,7 +68,8 @@ Mirrors `wordpress-org-repository-php-wrapper` 1.1.0.
 
 - Initial Python port of `wordpress-org-repository-php-wrapper` 1.0.0.
 
-[Unreleased]: https://github.com/Saggre/wordpress-org-repository-python-wrapper/compare/1.2.0...HEAD
+[Unreleased]: https://github.com/Saggre/wordpress-org-repository-python-wrapper/compare/1.2.1...HEAD
+[1.2.1]: https://github.com/Saggre/wordpress-org-repository-python-wrapper/compare/1.2.0...1.2.1
 [1.2.0]: https://github.com/Saggre/wordpress-org-repository-python-wrapper/compare/1.1.0...1.2.0
 [1.1.0]: https://github.com/Saggre/wordpress-org-repository-python-wrapper/compare/1.0.0...1.1.0
 [1.0.0]: https://github.com/Saggre/wordpress-org-repository-python-wrapper/releases/tag/1.0.0

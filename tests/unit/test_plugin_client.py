@@ -105,6 +105,15 @@ def test_get_tag_revisions_resolves_a_recreated_tag_to_its_latest_copy() -> None
 	assert tag.paths[0].copy_from_path == "/demo-plugin/trunk"
 
 
+def test_get_tag_revisions_caps_the_history_it_reads() -> None:
+	"""A limit caps the tag revisions the report returns, newest first."""
+	client, http = _client((200, fixture("tag_revisions.xml")))
+
+	client.get_tag_revisions(5)
+
+	assert "<S:limit>5</S:limit>" in _body(http, 0)
+
+
 def test_diff_versions_reads_the_range_between_two_tags() -> None:
 	"""The diff costs one report beyond the tag history, over the range between the tags."""
 	client, http = _diff_client()
@@ -172,3 +181,14 @@ def test_diff_versions_throws_on_an_untagged_version() -> None:
 
 	with pytest.raises(TagNotFoundException, match=r'^Version "1\.9\.1" of "demo-plugin" has no tag in the repository\.$'):
 		client.diff_versions("1.9.1", "1.10.4")
+
+
+def test_diff_versions_reports_a_version_tagged_before_its_limit() -> None:
+	"""A version tagged before the capped window names the window rather than the repository."""
+	client, http = _diff_client()
+	message = r'^Version "1\.9\.1" of "demo-plugin" has no tag in the newest 2 revisions of its tags\.$'
+
+	with pytest.raises(TagNotFoundException, match=message):
+		client.diff_versions("1.9.1", "1.10.4", 2)
+
+	assert "<S:limit>2</S:limit>" in _body(http, 0)

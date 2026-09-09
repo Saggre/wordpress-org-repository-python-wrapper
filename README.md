@@ -149,6 +149,15 @@ before = PluginClient(PluginClientConfig("gdpr-cookie-consent", "4.4.3")).get_fi
 A version that was published without ever being tagged raises `TagNotFoundException` rather than silently
 comparing the wrong pair, and an old version that was tagged after the new one raises `ValueError`.
 
+Resolving the two tags is the expensive half: it reads the tag history, which for a plugin with hundreds of
+releases costs far more than the diff itself. A caller comparing recent releases can cap that read, at the price
+of a `TagNotFoundException` for a version tagged before the window.
+
+```python
+# Read the newest twenty tag revisions instead of a decade of them.
+paths = client.diff_versions("4.4.3", "4.4.4", 20)
+```
+
 #### Map versions to revisions
 
 ```python
@@ -160,6 +169,10 @@ for version, entry in tags.items():
 	# A tag is a directory copy, so it also names the trunk revision the release was cut from.
 	print(f"{version} => r{entry.revision} from {entry.paths[0].copy_from_revision}")
 ```
+
+`get_tag_revisions(limit)` reads only the newest `limit` revisions of the `tags` directory. A release usually takes
+one revision, but retagging a release and editing a file inside a tag take their own, so the window can hold fewer
+versions.
 
 #### Read a revision range
 
@@ -292,8 +305,8 @@ and `diff_versions()` are plugin only, since the theme repository has no `tags` 
 | `get_log(limit=100, start_revision=None, end_revision=0)`   | `list[LogEntry]`   | Commit log of this plugin or theme, newest revision first.             |
 | `get_repository_log(limit=100, start_revision=None, end_revision=0)` | `list[LogEntry]` | Commit log of every plugin or theme at once.                  |
 | `get_changed_paths(start_revision, end_revision, path="", limit=0)` | `list[LogEntry]` | Revisions in an inclusive range, optionally scoped to a subtree. |
-| `get_tag_revisions()`                                       | `dict[str, LogEntry]` | Every published version to the revision that created its tag. |
-| `diff_versions(old, new)`                                   | `dict[str, LogPath]` | Files changed between two published versions, keyed by path.   |
+| `get_tag_revisions(limit=0)`                                 | `dict[str, LogEntry]` | Every published version to the revision that created its tag. |
+| `diff_versions(old, new, limit=0)`                          | `dict[str, LogPath]` | Files changed between two published versions, keyed by path.   |
 | `get_filesystem()`                                          | `WebDavFilesystem` | The underlying filesystem, for anything the client does not do.        |
 
 ### `PluginApiClient`

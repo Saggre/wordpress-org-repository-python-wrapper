@@ -25,17 +25,24 @@ class PluginClient(BaseClient[PluginClientConfig]):
 
 		return self.get_filesystem().list_contents(tags_path)
 
-	def get_tag_revisions(self) -> dict[str, LogEntry]:
+	def get_tag_revisions(self, limit: int = 0) -> dict[str, LogEntry]:
 		"""Map every published version to the revision that created its tag.
 
-		Reads the whole tag history in one request, so the cost grows with the
-		number of releases. A tag is a directory copy, so the entry also carries the
-		trunk revision the release was cut from, in the copy_from_revision of its
-		path.
+		Reads the tag history in one request, so without a limit the cost grows
+		with the number of releases. A caller that only needs the newest releases
+		can cap the revisions read, which is the whole cost of a diff for a plugin
+		with a long history. A tag is a directory copy, so the entry also carries
+		the trunk revision the release was cut from, in the copy_from_revision of
+		its path.
 
 		Ordered by revision, oldest release first. Version strings cannot be sorted
 		as text, where '1.10.4' lands between '1.1.9' and '1.2.0', but revision
 		numbers are monotonic.
+
+		limit is the maximum number of tag revisions to read, newest first, and 0
+		means no limit. A release usually takes one revision, but retagging a
+		release and editing a file inside a tag take their own, so the window can
+		hold fewer versions.
 
 		Raises ClientException on a repository read error.
 		"""
@@ -43,7 +50,7 @@ class PluginClient(BaseClient[PluginClientConfig]):
 		revisions: dict[str, LogEntry] = {}
 		deleted: set[str] = set()
 
-		for entry in self._get_log_for_path(self._get_root_path(), 0, None, 0, "tags"):
+		for entry in self._get_log_for_path(self._get_root_path(), limit, None, 0, "tags"):
 			for path in entry.paths:
 				if path.node_kind != "dir" or path.action is LogPathAction.MODIFIED or posixpath.dirname(path.path) != tags_path:
 					continue
@@ -63,7 +70,7 @@ class PluginClient(BaseClient[PluginClientConfig]):
 
 		return dict(reversed(revisions.items()))
 
-	def diff_versions(self, old: str, new: str) -> dict[str, LogPath]:
+	def diff_versions(self, old: str, new: str, limit: int = 0) -> dict[str, LogPath]:
 		"""Return the files that changed between two published versions, keyed by path.
 
 		Resolves both tags, then reads the revision range between them in a single
@@ -76,15 +83,22 @@ class PluginClient(BaseClient[PluginClientConfig]):
 		tag in the same range. A deleted or copied directory is listed in place of
 		the files it removed or brought along, since the log does not name them.
 
-		Raises TagNotFoundException when either version has no tag, ValueError when
-		the old version was not tagged before the new one, and ClientException on a
-		repository read error.
+		Resolving the tags is the expensive half for a plugin with a long history,
+		since it reads the whole tag log to find two revisions. A caller diffing
+		consecutive releases can cap that read with limit, at the price of a
+		TagNotFoundException for a version tagged before the window.
+
+		Raises TagNotFoundException when either version has no tag in the revisions
+		read, ValueError when the old version was not tagged before the new one,
+		and ClientException on a repository read error.
 		"""
-		tags = self.get_tag_revisions()
+		tags = self.get_tag_revisions(limit)
 
 		for version in (old, new):
 			if version not in tags:
-				raise TagNotFoundException(f'Version "{version}" of "{self.config.slug}" has no tag in the repository.')
+				scope = f"the newest {limit} revisions of its tags" if limit > 0 else "the repository"
+
+				raise TagNotFoundException(f'Version "{version}" of "{self.config.slug}" has no tag in {scope}.')
 
 		if tags[old].revision >= tags[new].revision:
 			raise ValueError(f'Version "{old}" was not tagged before version "{new}".')
