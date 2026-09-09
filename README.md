@@ -128,6 +128,49 @@ for entry in client.get_log(limit=10):
 		print(f"  [{path.action.value}] {path.path} {path.copy_from_path}")
 ```
 
+#### Compare two published versions
+
+`diff_versions()` lists the files a release touched without downloading either tree. It resolves both tags, then
+reads the revision range between them in a single request. Paths come back relative to the plugin root,
+deduplicated across trunk and the new tag, which vendors commonly commit the same edit to. A deleted or copied
+directory is listed in place of the files it removed or brought along, since the log does not name them.
+
+```python
+paths = client.diff_versions("4.4.3", "4.4.4")
+
+for path in paths.values():
+	# A path whose text_mods is False changed only its properties, its bytes are identical.
+	print(f"[{path.action.value}] {path.path}")
+
+# Fetch only what changed, then diff locally.
+before = PluginClient(PluginClientConfig("gdpr-cookie-consent", "4.4.3")).get_file("gdpr-cookie-consent.php")
+```
+
+A version that was published without ever being tagged raises `TagNotFoundException` rather than silently
+comparing the wrong pair, and an old version that was tagged after the new one raises `ValueError`.
+
+#### Map versions to revisions
+
+```python
+tags = client.get_tag_revisions()
+
+# Ordered by revision, oldest release first. Version strings cannot be sorted as text,
+# where '1.10.4' lands between '1.1.9' and '1.2.0'.
+for version, entry in tags.items():
+	# A tag is a directory copy, so it also names the trunk revision the release was cut from.
+	print(f"{version} => r{entry.revision} from {entry.paths[0].copy_from_revision}")
+```
+
+#### Read a revision range
+
+`get_changed_paths()` reads the revisions between two bounds, optionally scoped to a subtree. Both bounds are
+inclusive, and both are required: the server answers an empty report with HTTP 200 when the end revision is
+missing. An inverted range raises `ValueError`, as it does on `get_log()` and `get_repository_log()`.
+
+```python
+log = client.get_changed_paths(3686273, 3679496, "trunk/admin")
+```
+
 #### Export a tagged version
 
 Writes the whole tree of the configured version to a local directory, which recovers releases that are no
@@ -216,7 +259,7 @@ with client.get_zip_stream("hello-dolly") as stream:
 File and directory reads raise `FilesystemException`. Because directory listings are lazy, `UnableToListContents`
 is raised when the listing is iterated, not when it is requested. Everything else, including the commit log,
 raises `ClientException`, whose `status` is the HTTP status of the failed response, or `None` when the host could
-not be reached.
+not be reached. `TagNotFoundException` extends it and is raised when a version has no tag.
 
 ```python
 from wordpress_org_repository import ClientException, FilesystemException
@@ -236,8 +279,8 @@ except ClientException as error:
 
 ### `PluginClient` and `ThemeClient`
 
-Every method reads the slug and version held by the client's config. `get_tags_directory()` is plugin only, since the
-theme repository has no `tags` directory.
+Every method reads the slug and version held by the client's config. `get_tags_directory()`, `get_tag_revisions()`
+and `diff_versions()` are plugin only, since the theme repository has no `tags` directory.
 
 | Method                                                      | Returns            | Description                                                            |
 |-------------------------------------------------------------|--------------------|------------------------------------------------------------------------|
@@ -248,6 +291,9 @@ theme repository has no `tags` directory.
 | `export(destination)`                                       | `int`              | Writes the tree to a local directory and returns the number of files.  |
 | `get_log(limit=100, start_revision=None, end_revision=0)`   | `list[LogEntry]`   | Commit log of this plugin or theme, newest revision first.             |
 | `get_repository_log(limit=100, start_revision=None, end_revision=0)` | `list[LogEntry]` | Commit log of every plugin or theme at once.                  |
+| `get_changed_paths(start_revision, end_revision, path="", limit=0)` | `list[LogEntry]` | Revisions in an inclusive range, optionally scoped to a subtree. |
+| `get_tag_revisions()`                                       | `dict[str, LogEntry]` | Every published version to the revision that created its tag. |
+| `diff_versions(old, new)`                                   | `dict[str, LogPath]` | Files changed between two published versions, keyed by path.   |
 | `get_filesystem()`                                          | `WebDavFilesystem` | The underlying filesystem, for anything the client does not do.        |
 
 ### `PluginApiClient`

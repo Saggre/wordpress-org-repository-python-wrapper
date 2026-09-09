@@ -43,6 +43,10 @@ class BaseClient(Generic[ConfigT]):
 		"""Return the filesystem the client reads through."""
 		return self._filesystem
 
+	def _get_root_path(self) -> str:
+		"""Return the repository absolute path of the plugin or theme root, e.g. '/hello-dolly'."""
+		return Path("/").join("/", self.config.slug)
+
 	def _get_path(self, path: str) -> str:
 		"""Build the repository path of a plugin or theme file."""
 		return Path("/").join(
@@ -113,27 +117,55 @@ class BaseClient(Generic[ConfigT]):
 		"""Return the commit log of the configured plugin or theme, newest revision first.
 
 		start_revision defaults to the youngest revision. Raises ClientException
-		on a repository read error.
+		on a repository read error, and ValueError on a negative end revision or
+		an inverted range.
 		"""
-		return self._get_log_for_path(Path("/").join("/", self.config.slug), limit, start_revision, end_revision)
+		return self._get_log_for_path(self._get_root_path(), limit, start_revision, end_revision)
 
 	def get_repository_log(self, limit: int = 100, start_revision: int | None = None, end_revision: int = 0) -> list[LogEntry]:
 		"""Return the commit log of the whole repository, newest revision first.
 
 		A single revision spans every plugin or theme changed by that commit.
 		start_revision defaults to the youngest revision. Raises ClientException
-		on a repository read error.
+		on a repository read error, and ValueError on a negative end revision or
+		an inverted range.
 		"""
 		return self._get_log_for_path("/", limit, start_revision, end_revision)
 
-	def _get_log_for_path(self, path: str, limit: int, start_revision: int | None, end_revision: int) -> list[LogEntry]:
-		"""Run an SVN log-report against a repository absolute path."""
-		response = self.get_filesystem().report(path, create_request_body(limit, start_revision, end_revision))
+	def get_changed_paths(self, start_revision: int, end_revision: int, path: str = "", limit: int = 0) -> list[LogEntry]:
+		"""Return the revisions that changed a path of the configured plugin or theme, newest first.
+
+		The range is inclusive at both ends, as in get_log(). Scoping to a path
+		selects the revisions; each of them still reports every path it touched,
+		including paths outside the scope, so a revision that changed both trunk
+		and a tag lists both. The path is relative to the plugin or theme root,
+		e.g. 'tags' or 'trunk/admin', and a limit of 0 means no limit.
+
+		Raises ClientException on a repository read error, and ValueError on a
+		negative end revision or an inverted range.
+		"""
+		return self._get_log_for_path(self._get_root_path(), limit, start_revision, end_revision, path)
+
+	def _get_log_for_path(
+		self,
+		target: str,
+		limit: int,
+		start_revision: int | None,
+		end_revision: int,
+		path: str = "",
+	) -> list[LogEntry]:
+		"""Run an SVN log-report against a repository absolute path.
+
+		The server only answers a REPORT at the repository root or at a plugin or
+		theme root, so narrower scopes go into the request body rather than into
+		the target.
+		"""
+		response = self.get_filesystem().report(target, create_request_body(limit, start_revision, end_revision, path))
 
 		if not response.ok:
 			response.stream.close()
 
-			raise ClientException(f'Unable to read the commit log of "{path}".', response.status)
+			raise ClientException(f'Unable to read the commit log of "{target}".', response.status)
 
 		return parse_response(response.read())
 

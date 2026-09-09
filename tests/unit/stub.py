@@ -7,6 +7,13 @@ from http import HTTPStatus
 from wordpress_org_repository import HttpClient, HttpRequest, HttpResponse
 
 
+def response(status: int, body: str | bytes) -> HttpResponse:
+	"""Build a response carrying the given status and body."""
+	encoded = body.encode("utf-8") if isinstance(body, str) else body
+
+	return HttpResponse(status, HTTPStatus(status).phrase, Message(), io.BytesIO(encoded))
+
+
 class HttpClientStub(HttpClient):
 	"""Stands in for the network in unit tests."""
 
@@ -19,9 +26,7 @@ class HttpClientStub(HttpClient):
 	@classmethod
 	def respond_with(cls, status: int, body: str | bytes) -> "HttpClientStub":
 		"""Build a stub replaying a single response."""
-		encoded = body.encode("utf-8") if isinstance(body, str) else body
-
-		return cls(HttpResponse(status, HTTPStatus(status).phrase, Message(), io.BytesIO(encoded)))
+		return cls(response(status, body))
 
 	def send(self, request: HttpRequest) -> HttpResponse:
 		"""Record the request and return the next queued response."""

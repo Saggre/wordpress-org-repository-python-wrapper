@@ -14,6 +14,9 @@ from .listing import DirectoryListing
 
 DAV_NAMESPACE = "DAV:"
 
+# Commit logs are large XML documents that compress by more than an order of magnitude.
+REQUEST_HEADERS = {"Accept-Encoding": "gzip"}
+
 PROPFIND_BODY = (
 	b'<?xml version="1.0" encoding="utf-8"?>'
 	b'<d:propfind xmlns:d="DAV:"><d:prop>'
@@ -54,7 +57,7 @@ class WebDavFilesystem:
 		location = self._normalize_path(path)
 
 		try:
-			response = self._http_client.send(HttpRequest("GET", self._url(location)))
+			response = self._http_client.send(HttpRequest("GET", self._url(location), headers=dict(REQUEST_HEADERS)))
 		except ClientException as error:
 			raise UnableToReadFile.from_location(location, str(error)) from error
 
@@ -74,7 +77,7 @@ class WebDavFilesystem:
 		request = HttpRequest(
 			"REPORT",
 			self._url(self._normalize_path(path)),
-			headers={"Content-Type": "text/xml"},
+			headers={**REQUEST_HEADERS, "Content-Type": "text/xml"},
 			body=body.encode("utf-8"),
 		)
 
@@ -113,6 +116,7 @@ class WebDavFilesystem:
 			"PROPFIND",
 			self._url(location, trailing_slash=True),
 			headers={
+				**REQUEST_HEADERS,
 				"Content-Type": 'application/xml; charset="utf-8"',
 				"Depth": "1",
 			},

@@ -10,6 +10,7 @@ class LogPath:
 	"""A path touched by a revision, with where it was copied from when it is a copy.
 
 	Tags are copies, so copy_from_path resolves the trunk a version was cut from.
+	text_mods separates a content change from a property only one.
 	"""
 
 	path: str
@@ -17,3 +18,5 @@ class LogPath:
 	node_kind: str | None = None
 	copy_from_path: str | None = None
 	copy_from_revision: int | None = None
+	text_mods: bool = False
+	prop_mods: bool = False
